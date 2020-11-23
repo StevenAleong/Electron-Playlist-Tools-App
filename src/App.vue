@@ -16,12 +16,20 @@ import Header from './components/Header.vue';
 import Menu from './components/Menu.vue';
 import Title from './components/Title.vue';
 
+import state from './state';
+
 export default {
   name: 'App',
+  provide: {
+    state: state
+  },
   components: {
     Header,
     Menu,
     Title
+  },
+  mounted() {
+    state.loadSettings();
   }
 }
 </script>

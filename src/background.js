@@ -4,6 +4,7 @@ import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+import path from 'path'
 let shell = require('electron').shell
 
 // Scheme must be registered before the app is ready
@@ -16,6 +17,7 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: path.join(__static, 'icon.png'),
     title: 'Playlist Tools by Steven Aleong',
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -24,6 +26,10 @@ async function createWindow() {
       enableRemoteModule: true
     }
   })
+
+  if (!isDevelopment) {
+    win.setMenuBarVisibility(false);
+  }  
 
   win.webContents.on('new-window', function(e, url) {
     // make sure local urls stay in electron perimeter

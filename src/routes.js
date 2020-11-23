@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard.vue';
 import About from './pages/About.vue';
 import Logs from './pages/Logs.vue';
 import Scheduled from './pages/Scheduled.vue';
+import Settings from './pages/Settings.vue';
 
 import SpotifyPlaylistTools from './pages/spotify/PlaylistTools.vue';
 import SpotifyFunneler from './pages/spotify/Funneler.vue';
@@ -20,6 +21,7 @@ const routes = [
     { path: '/about', name: 'About', component: About, meta: { title: 'About' } },
     { path: '/logs', name: 'Logs', component: Logs, meta: { title: 'Logs' } },
     { path: '/scheduled', name: 'Scheduled', component: Scheduled, meta: { title: 'Scheduled' } },
+    { path: '/settings', name: 'Settings', component: Settings, meta: { title: 'Settings' } },
 
     { path: '/spotify-playlist-tools', name: 'SpotifyPlaylistTools', component: SpotifyPlaylistTools, meta: { title: 'Playlist Tools - Spotify' } },
     { path: '/spotify-funneler', name: 'SpotifyFunneler', component: SpotifyFunneler, meta: { title: 'Funneler - Spotify' } },
