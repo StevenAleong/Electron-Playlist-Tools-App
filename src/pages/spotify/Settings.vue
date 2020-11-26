@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: 'SpotifySettings',
+  name: 'spotifyToken',
   props: {
     
   }

@@ -16,7 +16,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
-    "electron-json-storage": "^4.3.0",
+    "electron-store": "^6.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.5"
   },
@@ -51,5 +51,10 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "electronWebpack": {
+    "main": {
+      "extraEntries": ["@/preload.js"]
+    }
+  }
 }

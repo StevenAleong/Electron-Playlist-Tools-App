@@ -9,11 +9,11 @@ import Settings from './pages/Settings.vue';
 import SpotifyPlaylistTools from './pages/spotify/PlaylistTools.vue';
 import SpotifyFunneler from './pages/spotify/Funneler.vue';
 import SpotifyInternetRadio from './pages/spotify/InternetRadio.vue';
-import SpotifySettings from './pages/spotify/Settings.vue';
+import spotifyToken from './pages/spotify/Settings.vue';
 import SpotifySetup from './pages/spotify/Setup.vue';
 
 import DeezerPlaylistTools from './pages/deezer/PlaylistTools.vue';
-import DeezerSettings from './pages/deezer/Settings.vue';
+import deezerToken from './pages/deezer/Settings.vue';
 import DeezerSetup from './pages/deezer/Setup.vue';
 
 const routes = [
@@ -26,11 +26,11 @@ const routes = [
     { path: '/spotify-playlist-tools', name: 'SpotifyPlaylistTools', component: SpotifyPlaylistTools, meta: { title: 'Playlist Tools - Spotify' } },
     { path: '/spotify-funneler', name: 'SpotifyFunneler', component: SpotifyFunneler, meta: { title: 'Funneler - Spotify' } },
     { path: '/spotify-internet-radio', name: 'SpotifyInternetRadio', component: SpotifyInternetRadio, meta: { title: 'Internet Radio - Spotify' } },
-    { path: '/spotify-settings', name: 'SpotifySettings', component: SpotifySettings, meta: { title: 'Settings - Spotify' } },
+    { path: '/spotify-settings', name: 'spotifyToken', component: spotifyToken, meta: { title: 'Settings - Spotify' } },
     { path: '/spotify-setup', name: 'SpotifySetup', component: SpotifySetup, meta: { title: 'Setup - Spotify' } },
     
     { path: '/deezer-playlist-tools', name: 'DeezerPlaylistTools', component: DeezerPlaylistTools, meta: { title: 'Playlist Tools - Deezer' } },
-    { path: '/deezer-settings', name: 'DeezerSettings', component: DeezerSettings, meta: { title: 'Settings - Deezer' } },
+    { path: '/deezer-settings', name: 'deezerToken', component: deezerToken, meta: { title: 'Settings - Deezer' } },
     { path: '/deezer-setup', name: 'DeezerSetup', component: DeezerSetup, meta: { title: 'Setup - Deezer' } }
 ];
 

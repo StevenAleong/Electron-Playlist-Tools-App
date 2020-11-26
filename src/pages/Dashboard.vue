@@ -1,9 +1,9 @@
 <template>
-    <TextBlock class="mb-5">
+    <Block class="mb-5">
         A quick overview of everything
-    </TextBlock>    
+    </Block>    
 
-    <TextBlock>
+    <Block>
       
         <button @click="storeValue" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Store Value
@@ -16,7 +16,7 @@
         <button @click="deleteValue" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
           Delete Value
         </button>
-    </TextBlock>
+    </Block>
 </template>
 
 <script>

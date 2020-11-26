@@ -1,5 +1,5 @@
 <template>
-    <TextBlock>
+    <Block>
         <p>
             This app was created because of the limitations that I was running into from the website version found at 
             <a href="https://stevenaleong.com/tools/spotifyplaylistrandomizer" target="_blank">https://stevenaleong.com/tools/spotifyplaylistrandomizer</a>.
@@ -18,7 +18,7 @@
             Website: <a href="https://stevenaleong.com" target="_blank">stevenaleong.com</a><br />
             Github: <a href="https://github.com/StevenAleong/playlist-tools" target="_blank">https://github.com/StevenAleong/playlist-tools</a>
         </p>
-    </TextBlock>
+    </Block>
 </template>
 
 <script>

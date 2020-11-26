@@ -29,6 +29,7 @@ export default {
     Title
   },
   mounted() {
+    // There's probably a better way of doing this but i'm dumb.
     state.loadSettings();
   }
 }
