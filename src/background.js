@@ -18,7 +18,7 @@ async function createWindow() {
     width: 1200,
     height: 800,
     icon: path.join(__static, 'icon.png'),
-    title: 'Playlist Tools by Steven Aleong',
+    title: 'Playlist Tools App by Steven Aleong',
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

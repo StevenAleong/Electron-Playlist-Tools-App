@@ -26,8 +26,8 @@ export default {
         }
     },
     mounted() {
-        this.showSpotify = this.state.settings.showSpotify;
-        this.showDeezer = this.state.settings.showDeezer;
+        this.showSpotify = this.state.data.showSpotify;
+        this.showDeezer = this.state.data.showDeezer;
     },
     props: {
 

@@ -1,6 +1,6 @@
 export default {
   "properties": {
-    "spotify_data": {
+    "spotifyData": {
       "type": "object",
       "properties": {
         "token": {
@@ -18,7 +18,7 @@ export default {
             "expires_in": {
               "type": "integer"
             },
-            "refresh_token": {
+            "refreshToken": {
               "type": "string"
             }
           },
@@ -27,19 +27,19 @@ export default {
             "type",
             "scope",
             "expires_in",
-            "refresh_token"
+            "refreshToken"
           ]
         },
-        "show_spotify": {
+        "showSpotify": {
           "type": "integer"
         }
       },
       "required": [
         "token",
-        "show_spotify"
+        "showSpotify"
       ]
     },
-    "deezer_data": {
+    "deezerData": {
       "type": "object",
       "properties": {
         "token": {
@@ -57,18 +57,18 @@ export default {
             "expires_in"
           ]
         },
-        "show_deezer": {
+        "showDeezer": {
           "type": "integer"
         }
       },
       "required": [
         "token",
-        "show_deezer"
+        "showDeezer"
       ]
     }
   },
   "required": [
-    "spotify_data",
-    "deezer_data"
+    "spotifyData",
+    "deezerData"
   ]
 };

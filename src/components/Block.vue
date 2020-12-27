@@ -1,6 +1,6 @@
 <template>
     <div class="rounded overflow-hidden border shadow-md">
-        <div class="px-6 py-4">
+        <div class="px-5 py-4">
             <slot></slot>
         </div>
     </div>

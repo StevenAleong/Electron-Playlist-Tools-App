@@ -17,6 +17,9 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "electron-store": "^6.0.1",
+    "moment": "^2.29.1",
+    "spotify-web-api-node": "^5.0.0",
+    "uuid": "^8.3.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.5"
   },
@@ -54,7 +57,9 @@
   ],
   "electronWebpack": {
     "main": {
-      "extraEntries": ["@/preload.js"]
+      "extraEntries": [
+        "@/preload.js"
+      ]
     }
   }
 }

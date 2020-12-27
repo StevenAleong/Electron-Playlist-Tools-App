@@ -9,7 +9,7 @@ import Settings from './pages/Settings.vue';
 import SpotifyPlaylistTools from './pages/spotify/PlaylistTools.vue';
 import SpotifyFunneler from './pages/spotify/Funneler.vue';
 import SpotifyInternetRadio from './pages/spotify/InternetRadio.vue';
-import spotifyToken from './pages/spotify/Settings.vue';
+import spotifySettings from './pages/spotify/Settings.vue';
 import SpotifySetup from './pages/spotify/Setup.vue';
 
 import DeezerPlaylistTools from './pages/deezer/PlaylistTools.vue';
@@ -26,7 +26,7 @@ const routes = [
     { path: '/spotify-playlist-tools', name: 'SpotifyPlaylistTools', component: SpotifyPlaylistTools, meta: { title: 'Playlist Tools - Spotify' } },
     { path: '/spotify-funneler', name: 'SpotifyFunneler', component: SpotifyFunneler, meta: { title: 'Funneler - Spotify' } },
     { path: '/spotify-internet-radio', name: 'SpotifyInternetRadio', component: SpotifyInternetRadio, meta: { title: 'Internet Radio - Spotify' } },
-    { path: '/spotify-settings', name: 'spotifyToken', component: spotifyToken, meta: { title: 'Settings - Spotify' } },
+    { path: '/spotify-settings', name: 'spotifySettings', component: spotifySettings, meta: { title: 'Settings - Spotify' } },
     { path: '/spotify-setup', name: 'SpotifySetup', component: SpotifySetup, meta: { title: 'Setup - Spotify' } },
     
     { path: '/deezer-playlist-tools', name: 'DeezerPlaylistTools', component: DeezerPlaylistTools, meta: { title: 'Playlist Tools - Deezer' } },
@@ -39,7 +39,7 @@ const router = createRouter({
     routes    
 });
 
-const DEFAULT_TITLE = 'Playlist Tools by Steven Aleong';
+const DEFAULT_TITLE = 'Playlist Tools App by Steven Aleong';
 
 router.afterEach((to) => {
     document.title = to.meta.title || DEFAULT_TITLE;
