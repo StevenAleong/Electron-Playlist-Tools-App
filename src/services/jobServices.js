@@ -55,27 +55,54 @@ async function processSpotifyShuffle() {
 
 async function processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes) {
     console.log('Moving track ' + index + ' to position ' + trackIndexes[index]);
-    var result = Spotify_movePlaylistTrack(playlistId, index, trackIndexes[index])
-    result.then(function(data) {
-        console.log(data);
+    try {
+        var result = Spotify_movePlaylistTrack(playlistId, index, trackIndexes[index])
+        result.then(function(data) {
+            console.log(data);
 
-        if (data.statusCode == 200) {
-            state.updateProcessingProgress((index / trackIndexes.length) * 100);
+            if (data.statusCode == 200) {
+                state.updateProcessingProgress((index / trackIndexes.length) * 100);
 
-            if ((index + 1) < trackIndexes.length) {
-                processSpotifyShuffleMoveTrack(playlistId, index + 1, trackIndexes);
+                if ((index + 1) < trackIndexes.length) {
+                    processSpotifyShuffleMoveTrack(playlistId, index + 1, trackIndexes);
+
+                } else {
+                    state.clearProcessing();
+                    isProcessing = false;
+
+                }
 
             } else {
-                state.clearProcessing();
-                isProcessing = false;
+                setTimeout(function() {
+                    if ((index) < trackIndexes.length) {
+                        processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
+                    }
+
+                }, 5000);
+            }
+
+        }, function(err) {
+            console.log(err);
+            setTimeout(function() {
+                if ((index) < trackIndexes.length) {
+                    processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
+
+                }
+
+            }, 5000);
+        });
+        
+    } catch (err) {
+        setTimeout(function() {
+            if ((index) < trackIndexes.length) {
+                processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
 
             }
-        }
 
-    }, function(err) {
-        console.log(err);
+        }, 5000);
 
-    });
+    }
+    
 }
 
 function shuffle(array) {

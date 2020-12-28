@@ -15,7 +15,7 @@
                     </div>
                     <div>
                         <b>Processing</b>: 
-                        <span v-if="state.data.processing != null" class="inline-flex"><em class="text-green-300 track-name mr-1">{{state.data.processing.name}}</em> <span class="text-white-500">({{state.data.processing.totalTracks}} tracks)</span></span>
+                        <span v-if="state.data.processing != null" class="inline-flex"><span class="text-green-300 track-name mr-1">{{state.data.processing.name}}</span> <span class="text-white-500">({{state.data.processing.totalTracks}} tracks)</span></span>
                         <span v-if="state.data.processing == null">Nothing</span>
                     </div>
                 </div>

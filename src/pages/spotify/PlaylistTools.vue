@@ -8,6 +8,10 @@
   </ColourBlock>
 
   <ColourBlock v-if="!this.isLoading && this.playlists.length > 0" class="mb-5">
+      <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded float-right text-xs -m-1" @click="reloadPlaylists">
+          Reload Playlists
+      </button>
+
       Playlists for {{username}}
   </ColourBlock>
 
@@ -114,6 +118,11 @@ export default {
 
   },
   methods: {
+    reloadPlaylists() {
+      this.playlists = [];
+      this.isLoading = true;
+      this.loadPlaylists();
+    },
     loadUserInformation() {
       var _this = this;
       var userInfo = getUserInformation();
