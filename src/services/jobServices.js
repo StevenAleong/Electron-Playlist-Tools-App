@@ -16,7 +16,7 @@ function setupJobTimer() {
 }
 
 function checkQueue() {
-    if (state.data.playlistQueue && state.data.playlistQueue.length > 0 && state.data.processing == null) {
+    if (state.data.jobQueue && state.data.jobQueue.length > 0 && state.data.processing == null) {
         state.processFirstInQueue();
     }
 }
@@ -25,84 +25,134 @@ function checkProcessing() {
     if (state.data.processing !== null && isProcessing == false) {
         isProcessing = true;
 
-        if (state.data.processing.source == sources.SPOTIFY && state.data.processing.jobType == jobTypes.SHUFFLE) {
-            processSpotifyShuffle();
+        if (state.data.processing.source == sources.SPOTIFY) {
+            var playlistInfo = Spotify_getPlaylist(state.data.processing.playlistId);
+            playlistInfo
+                .then(function(data) {
+                    console.log('Some information about this playlist', data.body);
+
+                    var totalTracks = data.body.tracks.total;
+                    var playlistId = data.body.id;
+                    state.updateProcessingTracks(totalTracks);
+
+                    if (state.data.processing.jobType == jobTypes.SHUFFLE) {                        
+                        var trackIndexes = Array.from(Array(totalTracks).keys());
+                        trackIndexes = shuffle(trackIndexes);
+                        processSpotifyShuffleMoveTrack(playlistId, 0, trackIndexes);
+                        
+                    } else if (state.data.processing.jobType == jobTypes.REVERSE) {
+                        processSpotifyReverse(playlistId, 0);
+
+                    }
+
+                }, function(err) {
+                    console.log('Something went wrong!', err);
+                    isProcessing = false;
+                });
+                
+            
         }
+
     }
 }
 
-async function processSpotifyShuffle() {
-    // Get playlist fresh from first
-    var playlistInfo = Spotify_getPlaylist(state.data.processing.playlistId);
-    playlistInfo
-        .then(function(data) {
-            console.log('Some information about this playlist', data.body);
+async function processSpotifyReverse(playlistId, index) {
+    if (state.data.processing != null && state.data.processing.cancelProcessing === true) {
+        state.clearProcessing();
+        isProcessing = false;
 
-            var totalTracks = data.body.tracks.total;
-            var playlistId = data.body.id;
-            state.updateProcessingTracks(totalTracks);
+    } else {
+        console.log('---------------------');
+        var totalTracks = state.data.processing.totalTracks;
 
-            var trackIndexes = Array.from(Array(totalTracks).keys());
-            trackIndexes = shuffle(trackIndexes);
+        console.log('Moving track from ' + index  + ' to ' + (totalTracks - index));
 
-            processSpotifyShuffleMoveTrack(playlistId, 0, trackIndexes);
+        // var result = await playlistInfo.ChangeTrackPosition(i, total - i, token);
+        // var result2 = await playlistInfo.ChangeTrackPosition(total - i - 2, i, token);
 
-        }, function(err) {
-            console.log('Something went wrong!', err);
-            isProcessing = false;
-        });    
+        var result = Spotify_movePlaylistTrack(playlistId, index, totalTracks - index);
+        result.then(function(data) {
+            if (data.statusCode == 200) {
+                console.log('Moving track from ' + (totalTracks - index - 2) + ' to ' + index);
+
+                var result2 = Spotify_movePlaylistTrack(playlistId, totalTracks - index - 2, index);
+                result2.then(function(data2) {
+                    if (data2.statusCode == 200) {
+                        state.updateProcessingProgress((index / (totalTracks / 2)) * 100);
+
+                        if (index < Math.floor(totalTracks / 2)) {
+                            processSpotifyReverse(playlistId, index + 1);
+
+                        } else {
+                            state.clearProcessing();
+                            isProcessing = false;
+
+                        }
+
+                    }
+                    
+                });
+            }
+        });
+        
+    }
 }
 
 async function processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes) {
-    console.log('Moving track ' + index + ' to position ' + trackIndexes[index]);
-    try {
-        var result = Spotify_movePlaylistTrack(playlistId, index, trackIndexes[index])
-        result.then(function(data) {
-            console.log(data);
+    if (state.data.processing != null && state.data.processing.cancelProcessing === true) {
+        state.clearProcessing();
+        isProcessing = false;
 
-            if (data.statusCode == 200) {
-                state.updateProcessingProgress((index / trackIndexes.length) * 100);
-
-                if ((index + 1) < trackIndexes.length) {
-                    processSpotifyShuffleMoveTrack(playlistId, index + 1, trackIndexes);
-
+    } else {
+        console.log('Moving track ' + index + ' to position ' + trackIndexes[index]);
+        try {
+            var result = Spotify_movePlaylistTrack(playlistId, index, trackIndexes[index]);
+            result.then(function(data) {
+                console.log(data);
+    
+                if (data.statusCode == 200) {
+                    state.updateProcessingProgress((index / trackIndexes.length) * 100);
+    
+                    if ((index + 1) < trackIndexes.length) {
+                        processSpotifyShuffleMoveTrack(playlistId, index + 1, trackIndexes);
+    
+                    } else {
+                        state.clearProcessing();
+                        isProcessing = false;
+    
+                    }
+    
                 } else {
-                    state.clearProcessing();
-                    isProcessing = false;
-
+                    setTimeout(function() {
+                        if ((index) < trackIndexes.length) {
+                            processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
+                        }
+    
+                    }, 5000);
                 }
-
-            } else {
+    
+            }, function(err) {
+                console.log(err);
                 setTimeout(function() {
                     if ((index) < trackIndexes.length) {
                         processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
+    
                     }
-
+    
                 }, 5000);
-            }
-
-        }, function(err) {
-            console.log(err);
+            });
+            
+        } catch (err) {
             setTimeout(function() {
                 if ((index) < trackIndexes.length) {
                     processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
-
-                }
-
-            }, 5000);
-        });
-        
-    } catch (err) {
-        setTimeout(function() {
-            if ((index) < trackIndexes.length) {
-                processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
-
-            }
-
-        }, 5000);
-
-    }
     
+                }
+    
+            }, 5000);
+    
+        }
+    }
 }
 
 function shuffle(array) {

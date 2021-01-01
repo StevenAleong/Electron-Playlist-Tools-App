@@ -5,7 +5,7 @@ const moment = require('moment');
 
 const Store = require('electron-store');
 
-const playlist_schema = {
+const jobSchema = {
     type: 'object',
     properties: {
         uniqueId: { type: 'string', default: '' },
@@ -18,7 +18,8 @@ const playlist_schema = {
         lastDone: { type: 'string', format: 'date-time', default: '' },
         totalTracks: { type: 'number', default: 0 },
         progress: { type: 'number', default: 0 },
-        dateAdded: { type: 'string', format: 'date-time', default: '' }
+        dateAdded: { type: 'string', format: 'date-time', default: '' },
+        cancelProcessing: { type: 'boolean', default: false }
     }
 };
 
@@ -44,17 +45,17 @@ const schema = {
         showDeezer: { type: 'number', default:  1 },
         username: { type: 'string', default: '' }
     },
-    playlistQueue: {
+    jobQueue: {
         type: 'array', 
         items: [
-            playlist_schema
+            jobSchema
         ],
         default: [] 
     },
-    playlistSchedule: {
+    jobSchedule: {
         type: 'array', 
         items: [
-            playlist_schema
+            jobSchema
         ],
         default: [] 
     }
@@ -71,16 +72,16 @@ const state = reactive({
     deezerUsername: '',
     showDeezer: true,
 
-    playlistQueue: [],
-    playlistSchedule: [],
+    jobQueue: [],
+    jobSchedule: [],
     processing: null
 });
 
 const loadData = function() {
 
     // Queues and Schedule
-    state.playlistQueue = store.get('playlistQueue');
-    state.playlistSchedule = store.get('playlistSchedule');
+    state.jobQueue = store.get('jobQueue');
+    state.jobSchedule = store.get('jobSchedule');
 
     // Spotify
     state.showSpotify = store.get('spotifyData.showSpotify') === 1;
@@ -99,15 +100,16 @@ const loadData = function() {
 };
 
 const addToQueue = function(source, id, job, tracks, name) {
-    state.playlistQueue.push({
+    state.jobQueue.push({
         uniqueId: uuidv4(),
         source: source,
         playlistId: id,
         jobType: job,
         totalTracks: tracks,
         name: name,
-        progress: 0,
-        dateAdded: moment()
+        progress: 0.00,
+        dateAdded: moment(),
+        cancelProcessing: false
     });
     // source: { type: 'string', default: '' },
     //     playlistId: { type: 'string', default: '' },
@@ -119,7 +121,7 @@ const addToQueue = function(source, id, job, tracks, name) {
 }
 
 const processFirstInQueue = function() {
-    state.processing = state.playlistQueue.shift();
+    state.processing = state.jobQueue.shift();
 };
 
 const saveSpotifyToken = function(token, refreshToken, expiresOn) {
@@ -180,9 +182,19 @@ const updateProcessingProgress = function(progress) {
     }
 }
 
+const cancelProcessing = function() {
+    state.processing.cancelProcessing = true;
+};
+
 const clearProcessing = function() {
     state.processing = null;
 };
+
+const removeFromQueue = function(uniqueId) {
+    state.jobQueue.splice(state.jobQueue.findIndex(item => item.uniqueId === uniqueId), 1);
+};
+
+
 
 export default { 
     data: readonly(state), 
@@ -197,5 +209,7 @@ export default {
     processFirstInQueue,
     updateProcessingTracks,
     updateProcessingProgress,
-    clearProcessing
+    cancelProcessing,
+    clearProcessing,
+    removeFromQueue
 };

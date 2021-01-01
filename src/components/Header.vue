@@ -11,12 +11,17 @@
             <div class="flex items-center text-right h-full px-4">
                 <div class="w-full text-white">
                     <div>
-                        <b>Queue</b>: {{state.data.playlistQueue.length}}
+                        <b>Queue</b>: {{state.data.jobQueue.length}}
                     </div>
                     <div>
                         <b>Processing</b>: 
-                        <span v-if="state.data.processing != null" class="inline-flex"><span class="text-green-300 track-name mr-1">{{state.data.processing.name}}</span> <span class="text-white-500">({{state.data.processing.totalTracks}} tracks)</span></span>
-                        <span v-if="state.data.processing == null">Nothing</span>
+                        <span v-if="state.data.processing != null">
+                            <span class="text-green-300 track-name mr-1">{{state.data.processing.name}}</span> 
+                            [<span class="text-white-500">{{state.data.processing.totalTracks}} tracks - {{state.data.processing.progress}}%</span>]
+                            <button title="Stop the current processing item" v-on:click="stopProcessing"><CancelIcon /></button>
+                        </span>
+
+                        <span v-if="state.data.processing == null">Nothing </span>
                     </div>
                 </div>
             </div>
@@ -56,6 +61,11 @@ export default {
       progressStyle () {
         return 'width: ' + (this.state.data.processing != null ? this.state.data.processing.progress : 0) + '%';
       }
+    },
+    methods: {
+        stopProcessing() {
+            this.state.cancelProcessing();
+        }
     }
 }
 </script>
