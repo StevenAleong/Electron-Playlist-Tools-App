@@ -41,7 +41,7 @@ function checkProcessing() {
                         processSpotifyShuffleMoveTrack(playlistId, 0, trackIndexes);
                         
                     } else if (state.data.processing.jobType == jobTypes.REVERSE) {
-                        processSpotifyReverse(playlistId, 0);
+                        processSpotifyReverse(playlistId, 0, true);
 
                     }
 
@@ -56,45 +56,52 @@ function checkProcessing() {
     }
 }
 
-async function processSpotifyReverse(playlistId, index) {
+async function processSpotifyReverse(playlistId, index, forward) {
     if (state.data.processing != null && state.data.processing.cancelProcessing === true) {
         state.clearProcessing();
         isProcessing = false;
 
     } else {
-        console.log('---------------------');
         var totalTracks = state.data.processing.totalTracks;
 
-        console.log('Moving track from ' + index  + ' to ' + (totalTracks - index));
-
-        // var result = await playlistInfo.ChangeTrackPosition(i, total - i, token);
-        // var result2 = await playlistInfo.ChangeTrackPosition(total - i - 2, i, token);
-
-        var result = Spotify_movePlaylistTrack(playlistId, index, totalTracks - index);
-        result.then(function(data) {
-            if (data.statusCode == 200) {
+        try {
+            if (forward) {
+                console.log('Moving track from ' + index  + ' to ' + (totalTracks - index));
+                var result = Spotify_movePlaylistTrack(playlistId, index, totalTracks - index);
+                result.then(function(data) {
+                    if (data.statusCode == 200) {
+                        processSpotifyReverse(playlistId, index, false);
+                    } else {
+                        setTimeout(processSpotifyReverse(playlistId, index, forward), 5000);
+                    }
+                });
+    
+            } else {
                 console.log('Moving track from ' + (totalTracks - index - 2) + ' to ' + index);
-
                 var result2 = Spotify_movePlaylistTrack(playlistId, totalTracks - index - 2, index);
                 result2.then(function(data2) {
                     if (data2.statusCode == 200) {
+    
                         state.updateProcessingProgress((index / (totalTracks / 2)) * 100);
-
+    
                         if (index < Math.floor(totalTracks / 2)) {
-                            processSpotifyReverse(playlistId, index + 1);
-
+                            processSpotifyReverse(playlistId, index + 1, true);
+    
                         } else {
                             state.clearProcessing();
                             isProcessing = false;
-
+    
                         }
-
+    
+                    } else {
+                        setTimeout(processSpotifyReverse(playlistId, index, forward), 5000);
                     }
-                    
                 });
             }
-        });
-        
+
+        } catch {
+            processSpotifyReverse(playlistId, index, forward);
+        }
     }
 }
 
@@ -123,33 +130,16 @@ async function processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes) {
                     }
     
                 } else {
-                    setTimeout(function() {
-                        if ((index) < trackIndexes.length) {
-                            processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
-                        }
-    
-                    }, 5000);
+                    setTimeout(processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes), 5000);
                 }
     
             }, function(err) {
                 console.log(err);
-                setTimeout(function() {
-                    if ((index) < trackIndexes.length) {
-                        processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
-    
-                    }
-    
-                }, 5000);
+                setTimeout(processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes), 5000);
             });
             
         } catch (err) {
-            setTimeout(function() {
-                if ((index) < trackIndexes.length) {
-                    processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes);
-    
-                }
-    
-            }, 5000);
+            setTimeout(processSpotifyShuffleMoveTrack(playlistId, index, trackIndexes), 5000);
     
         }
     }
